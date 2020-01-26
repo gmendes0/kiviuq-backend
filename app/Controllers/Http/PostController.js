@@ -1,11 +1,11 @@
-'use strict'
+"use strict";
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Post = use('App/Models/Post')
+const Post = use("App/Models/Post");
 
 /**
  * Resourceful controller for interacting with posts
@@ -17,12 +17,12 @@ class PostController {
    *
    * @param {object} ctx
    */
-  async index () {
+  async index() {
     const posts = await Post.query()
-      .with('user', (builder) => builder.select(['id', 'username']))
-      .fetch()
+      .with("user", builder => builder.select(["id", "username"]))
+      .fetch();
 
-    return posts
+    return posts;
   }
 
   /**
@@ -32,13 +32,13 @@ class PostController {
    * @param {object} ctx
    * @param {Request} ctx.request
    */
-  async store ({ request, auth }) {
-    const data = request.only(['description'])
-    const user_id = auth.user.id
+  async store({ request, auth }) {
+    const data = request.only(["description"]);
+    const user_id = auth.user.id;
 
-    const post = await Post.create({...data, user_id})
+    const post = await Post.create({ ...data, user_id });
 
-    return post
+    return post;
   }
 
   /**
@@ -48,13 +48,13 @@ class PostController {
    * @param {object} ctx
    * @param {Request} ctx.request
    */
-  async show ({ params }) {
+  async show({ params }) {
     const post = await Post.query()
-      .where('id', params.id)
-      .with('user', (builder) => builder.select(['id', 'username']))
-      .firstOrFail()
+      .where("id", params.id)
+      .with("user", builder => builder.select(["id", "username"]))
+      .firstOrFail();
 
-    return post
+    return post;
   }
 
   /**
@@ -65,19 +65,19 @@ class PostController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response, auth }) {
-    const data = request.only(['description'])
+  async update({ params, request, response, auth }) {
+    const data = request.only(["description"]);
 
-    const post = await Post.findOrFail(params.id)
+    const post = await Post.findOrFail(params.id);
 
     if (post.user_id !== auth.user.id)
-      return response.status(401).json({ error: "unauthorized." })
+      return response.status(401).json({ error: "unauthorized." });
 
-    post.merge({ ...data })
+    post.merge({ ...data });
 
-    await post.save()
+    await post.save();
 
-    return post
+    return post;
   }
 
   /**
@@ -88,14 +88,14 @@ class PostController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response, auth }) {
-    const post = await Post.findOrFail(params.id)
+  async destroy({ params, request, response, auth }) {
+    const post = await Post.findOrFail(params.id);
 
     if (post.user_id !== auth.user.id)
-      return response.status(401).json({ error: 'unauthorized.' })
+      return response.status(401).json({ error: "unauthorized." });
 
-    return await post.delete()
+    return await post.delete();
   }
 }
 
-module.exports = PostController
+module.exports = PostController;

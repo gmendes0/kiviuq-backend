@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 /*
 |--------------------------------------------------------------------------
@@ -14,14 +14,26 @@
 */
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
-const Route = use('Route')
+const Route = use("Route");
 
-Route.post('/register', 'AuthController.register')
-Route.post('/authenticate', 'AuthController.authenticate')
+Route.post("/register", "AuthController.register");
+Route.post("/authenticate", "AuthController.authenticate");
+Route.get("/", "PostController.index");
 Route.group(() => {
-    Route.get('/', 'PostController.index')
-    Route.post('/posts', 'PostController.store')
-    Route.get('/posts/:id', 'PostController.show')
-    Route.put('/posts/:id', 'PostController.update')
-    Route.delete('/posts/:id', 'PostController.destroy')
-}).middleware('auth')
+  /**
+   * Post routes
+   */
+  Route.post("/posts", "PostController.store");
+  Route.get("/posts/:id", "PostController.show");
+  Route.put("/posts/:id", "PostController.update");
+  Route.delete("/posts/:id", "PostController.destroy");
+
+  /**
+   * Comment routes
+   */
+  Route.get("/posts/:post_id/comments/", "CommentController.index");
+  Route.get("/comments/:comment_id", "CommentController.show");
+  Route.post("/comments", "CommentController.store");
+  Route.put("/comments/:comment_id", "CommentController.update");
+  Route.delete("/comments/:comment_id", "CommentController.destroy");
+}).middleware("auth");
