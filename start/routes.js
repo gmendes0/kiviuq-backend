@@ -36,4 +36,10 @@ Route.group(() => {
   Route.post("/comments", "CommentController.store");
   Route.put("/comments/:comment_id", "CommentController.update");
   Route.delete("/comments/:comment_id", "CommentController.destroy");
+
+  /**
+   * Image routes
+   */
 }).middleware("auth");
+Route.post("/images", "ImageController.store");
+

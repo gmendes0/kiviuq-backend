@@ -1,0 +1,37 @@
+'use strict'
+
+/** @type {import('@adonisjs/lucid/src/Schema')} */
+const Schema = use('Schema')
+
+class ImageSchema extends Schema {
+  up () {
+    this.create('images', (table) => {
+      table.increments()
+      table.integer('post_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('posts')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE')
+      table.integer('user_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE')
+      table.string('filename')
+      table.string('originalname')
+      table.integer('size')
+      table.string('url')
+      table.timestamps()
+    })
+  }
+
+  down () {
+    this.drop('images')
+  }
+}
+
+module.exports = ImageSchema

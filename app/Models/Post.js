@@ -4,12 +4,16 @@
 const Model = use("Model");
 
 class Post extends Model {
-  user() {
+  user () {
     return this.belongsTo("App/Models/User");
   }
 
-  comments() {
+  comments () {
     return this.hasMany("App/Models/Comments");
+  }
+
+  images () {
+    return this.hasMany("App/Models/Image");
   }
 }
 
