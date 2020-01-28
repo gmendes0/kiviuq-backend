@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -25,7 +25,7 @@ class ImageController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, params }) {}
+  async index({ request, response, params }) {}
 
   /**
    * Render a form to be used for creating a new image.
@@ -36,8 +36,7 @@ class ImageController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async create ({ request, response, view }) {
-  }
+  async create({ request, response, view }) {}
 
   /**
    * Create/save a new image.
@@ -47,26 +46,25 @@ class ImageController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response, params }) {
-    const post = await Post.findOrFail(params.id)
+  async store({ request, response, params }) {
+    const post = await Post.findOrFail(params.id);
 
-    const postImage = request.file('image', {
-      types: ['image'],
-      size: '2mb'
+    const postImage = request.file("image", {
+      types: ["image"],
+      size: "2mb"
     });
 
-    await postImage.move(Helpers.tmpPath('uploads'), {
+    await postImage.move(Helpers.tmpPath("uploads"), {
       name: `${Date.now()}-${postImage.clientName}`
     });
 
-    if (!postImage.moved())
-      return postImage.error();
+    if (!postImage.moved()) return postImage.error();
 
     const image = await post.images().create({
       filename: postImage.filename,
       originalname: postImage.clientName,
       size: postImage.size,
-      url: ''
+      url: ""
     });
 
     return image;
@@ -81,8 +79,7 @@ class ImageController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
-  }
+  async show({ params, request, response, view }) {}
 
   /**
    * Render a form to update an existing image.
@@ -93,8 +90,7 @@ class ImageController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit ({ params, request, response, view }) {
-  }
+  async edit({ params, request, response, view }) {}
 
   /**
    * Update image details.
@@ -104,8 +100,7 @@ class ImageController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
-  }
+  async update({ params, request, response }) {}
 
   /**
    * Delete a image with id.
@@ -115,8 +110,7 @@ class ImageController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
-  }
+  async destroy({ params, request, response }) {}
 }
 
-module.exports = ImageController
+module.exports = ImageController;

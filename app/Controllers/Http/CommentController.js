@@ -20,16 +20,12 @@ class CommentController {
    * @param {object} ctx
    */
   async index({ params }) {
-    const post = await Post.query()
-      .where("id", params.post_id)
-      .with("comments", builder => {
-        builder.with("user", builder => {
-          builder.select(["id", "username"]);
-        });
-      })
-      .firstOrFail();
+    const comments = await Comment.query()
+      .where("post_id", params.post_id)
+      .with("user", builder => builder.select(["id", "username"]))
+      .fetch();
 
-    return post.comments;
+    return comments;
   }
 
   /**
