@@ -42,25 +42,25 @@ test("it should get all comments", async ({ client, assert }) => {
     { content: "Wow!", user_id: 1 }
   ]);
 
-  const resposne = await client.get("/posts/1/comments").end();
+  const response = await client.get("/posts/1/comments").end();
 
-  resposne.assertStatus(200);
-  assert.isArray(resposne.body);
-  resposne.assertJSONSubset([{ content: "Amazing!" }, { content: "Wow!" }]);
+  response.assertStatus(200);
+  assert.isArray(response.body);
+  response.assertJSONSubset([{ content: "Amazing!" }, { content: "Wow!" }]);
 });
 
 test("it should create a comment", async ({ client, assert }) => {
   const post = await Post.query().first();
 
-  const resposne = await client
+  const response = await client
     .post(`/posts/${post.id}/comments`)
     .send({ content: "Amazing!" })
     .loginVia(await User.query().first())
     .end();
 
-  resposne.assertStatus(200);
-  assert.isNotArray(resposne.body);
-  resposne.assertJSONSubset({ content: "Amazing!" });
+  response.assertStatus(200);
+  assert.isNotArray(response.body);
+  response.assertJSONSubset({ content: "Amazing!" });
 });
 
 test("it should get only one comment when comment id given", async ({
@@ -73,9 +73,76 @@ test("it should get only one comment when comment id given", async ({
     .comments()
     .create({ content: "Amazing!", user_id: 1 });
 
-  const resposne = await client.get(`/comments/${comment.id}`).end();
+  const response = await client.get(`/comments/${comment.id}`).end();
 
-  resposne.assertStatus(200);
-  assert.isNotArray(resposne.body);
-  resposne.assertJSONSubset({ content: "Amazing!" });
+  response.assertStatus(200);
+  assert.isNotArray(response.body);
+  response.assertJSONSubset({ content: "Amazing!" });
+});
+
+test("it should update a existent comment", async ({ client, assert }) => {
+  const post = await Post.query().first();
+  const comment = await post.comments().create({
+    content: "Amazing!",
+    user_id: 1
+  });
+
+  const response = await client
+    .put(`/comments/${comment.id}`)
+    .send({ content: "Wow, amazing!" })
+    .loginVia(await User.query().first())
+    .end();
+
+  response.assertStatus(200);
+  assert.isNotArray(response.body);
+  response.assertJSONSubset({ content: "Wow, amazing!" });
+});
+
+test("it should delete a existent comment", async ({ client, assert }) => {
+  const post = await Post.query().first();
+  const comment = await post.comments().create({
+    content: "Amazing!",
+    user_id: 1
+  });
+
+  const response = await client
+    .delete(`/comments/${comment.id}`)
+    .loginVia(await User.query().first())
+    .end();
+
+  response.assertStatus(200);
+  assert.isNotArray(response.body);
+});
+
+test("it should return unauthorized status if try to update a existent comment without authenticate", async ({
+  client
+}) => {
+  const post = await Post.query().first();
+  const comment = await post.comments().create({
+    content: "Amazing!",
+    user_id: 1
+  });
+
+  const response = await client
+    .put(`/comments/${comment.id}`)
+    .send({ content: "Wow, amazing!" })
+    .end();
+
+  response.assertStatus(401);
+  response.assertJSONSubset({});
+});
+
+test("it should return unauthorized status if try to delete a existent comment without authenticate", async ({
+  client
+}) => {
+  const post = await Post.query().first();
+  const comment = await post.comments().create({
+    content: "Amazing!",
+    user_id: 1
+  });
+
+  const response = await client.delete(`/comments/${comment.id}`).end();
+
+  response.assertStatus(401);
+  response.assertJSONSubset({});
 });

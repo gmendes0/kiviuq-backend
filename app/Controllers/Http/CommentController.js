@@ -73,12 +73,11 @@ class CommentController {
    */
   async update({ params, request, auth, response }) {
     const data = request.only(["content"]);
-    const user_id = auth.user.id;
+
+    const comment = await Comment.findOrFail(params.comment_id);
 
     if (comment.user_id !== auth.user.id)
       return response.status(401).json({ error: "unauthorized." });
-
-    const comment = await Comment.findOrFail(params.comment_id);
 
     comment.merge({ ...data });
 
