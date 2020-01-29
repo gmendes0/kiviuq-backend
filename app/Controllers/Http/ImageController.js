@@ -17,28 +17,6 @@ const Image = use("App/Models/Image");
  */
 class ImageController {
   /**
-   * Show a list of all images.
-   * GET images
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index({ request, response, params }) {}
-
-  /**
-   * Render a form to be used for creating a new image.
-   * GET images/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create({ request, response, view }) {}
-
-  /**
    * Create/save a new image.
    * POST images
    *
@@ -46,8 +24,8 @@ class ImageController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store({ request, response, params }) {
-    const post = await Post.findOrFail(params.id);
+  async store({ request, response, params, auth }) {
+    const post = await Post.findOrFail(params.post_id);
 
     const postImage = request.file("image", {
       types: ["image"],
@@ -61,7 +39,8 @@ class ImageController {
     if (!postImage.moved()) return postImage.error();
 
     const image = await post.images().create({
-      filename: postImage.filename,
+      user_id: auth.user.id,
+      filename: postImage.fileName,
       originalname: postImage.clientName,
       size: postImage.size,
       url: ""
@@ -71,38 +50,6 @@ class ImageController {
   }
 
   /**
-   * Display a single image.
-   * GET images/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show({ params, request, response, view }) {}
-
-  /**
-   * Render a form to update an existing image.
-   * GET images/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit({ params, request, response, view }) {}
-
-  /**
-   * Update image details.
-   * PUT or PATCH images/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update({ params, request, response }) {}
-
-  /**
    * Delete a image with id.
    * DELETE images/:id
    *
@@ -110,7 +57,14 @@ class ImageController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy({ params, request, response }) {}
+  async destroy({ params, request, response, auth }) {
+    const image = await Image.findOrFail(params.id);
+
+    if (image.user_id !== auth.user.id)
+      return response.status(401).json({ error: "unauthorized." });
+
+    return await image.delete();
+  }
 }
 
 module.exports = ImageController;

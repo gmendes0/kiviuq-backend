@@ -49,5 +49,6 @@ Route.group(() => {
   /**
    * Image routes
    */
+  Route.post("posts/:post_id/images", "ImageController.store");
+  Route.delete("/images/:id", "ImageController.destroy");
 }).middleware("auth");
-Route.post("/images", "ImageController.store");
