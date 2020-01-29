@@ -9,7 +9,11 @@ class Post extends Model {
   }
 
   comments() {
-    return this.hasMany("App/Models/Comments");
+    return this.hasMany("App/Models/Comment");
+  }
+
+  images() {
+    return this.hasMany("App/Models/Image");
   }
 }
 
