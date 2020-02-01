@@ -56,7 +56,7 @@ test("it should return status 500 if no data given to register", async ({
 }) => {
   const response = await client.post("/register").end();
 
-  response.assertStatus(500);
+  response.assertStatus(400);
 });
 
 test("it should return status 401 unauthorized if the email or password are incorrect.", async ({

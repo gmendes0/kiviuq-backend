@@ -51,4 +51,10 @@ Route.group(() => {
    */
   Route.post("posts/:post_id/images", "ImageController.store");
   Route.delete("/images/:id", "ImageController.destroy");
+
+  /**
+   * Avatar routes
+   */
+  Route.post("/users/avatars", "AvatarController.store");
+  Route.delete("/users/avatars", "AvatarController.destroy");
 }).middleware("auth");
