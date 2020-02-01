@@ -22,7 +22,9 @@ class CommentController {
   async index({ params }) {
     const comments = await Comment.query()
       .where("post_id", params.post_id)
-      .with("user", builder => builder.select(["id", "username"]))
+      .with("user", builder =>
+        builder.select(["id", "username"]).with("avatar")
+      )
       .fetch();
 
     return comments;
@@ -56,7 +58,7 @@ class CommentController {
     const comment = await Comment.query()
       .where("id", params.comment_id)
       .with("user", builder => {
-        builder.select(["id", "username"]);
+        builder.select(["id", "username"]).with("avatar");
       })
       .firstOrFail();
 
