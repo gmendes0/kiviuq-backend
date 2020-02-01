@@ -1,0 +1,7 @@
+{
+  "email": "O campo {{field}} deve ser um endereço de email válido.",
+  "max": "O campo {{field}} não deve ser maior que {{argument.0}}.",
+  "min": "O campo {{field}} não deve ser menor que {{argument.0}}",
+  "required": "{{field}} é obrigatório.",
+  "unique": "Esse {{field}} já está em uso."
+}
