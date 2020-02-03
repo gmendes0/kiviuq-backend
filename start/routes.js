@@ -16,7 +16,7 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use("Route");
 
-Route.post("/register", "AuthController.register");
+Route.post("/register", "AuthController.register").validator("Session");
 Route.post("/authenticate", "AuthController.authenticate");
 
 /**
@@ -51,4 +51,10 @@ Route.group(() => {
    */
   Route.post("posts/:post_id/images", "ImageController.store");
   Route.delete("/images/:id", "ImageController.destroy");
+
+  /**
+   * Avatar routes
+   */
+  Route.post("/users/avatars", "AvatarController.store");
+  Route.delete("/users/avatars", "AvatarController.destroy");
 }).middleware("auth");

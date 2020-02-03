@@ -19,7 +19,9 @@ class PostController {
    */
   async index() {
     const posts = await Post.query()
+      .with("images")
       .with("user", builder => builder.select(["id", "username"]))
+      .withCount("comments")
       .fetch();
 
     return posts;
@@ -51,7 +53,9 @@ class PostController {
   async show({ params }) {
     const post = await Post.query()
       .where("id", params.id)
+      .with("images")
       .with("user", builder => builder.select(["id", "username"]))
+      .withCount("comments")
       .firstOrFail();
 
     return post;

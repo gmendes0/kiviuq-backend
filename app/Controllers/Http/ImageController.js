@@ -32,8 +32,8 @@ class ImageController {
       size: "2mb"
     });
 
-    await postImage.move(Helpers.tmpPath("uploads"), {
-      name: `${Date.now()}-${postImage.clientName}`
+    await postImage.move(Helpers.tmpPath(`uploads/posts/${post.id}`), {
+      name: `${Date.now()}.${postImage.subtype}`
     });
 
     if (!postImage.moved()) return postImage.error();
