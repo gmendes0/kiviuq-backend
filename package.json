@@ -29,7 +29,7 @@
     "@adonisjs/validator": "^5.0.6",
     "@adonisjs/vow": "^1.0.17",
     "pg": "^7.17.1",
-    "url-parse": "^1.4.7"
+    "url-parse": "^1.5.0"
   },
   "husky": {
     "hooks": {
